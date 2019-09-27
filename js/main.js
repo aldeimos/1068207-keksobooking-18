@@ -7,7 +7,7 @@ var LOCATION_X_END = 1200 - AVATAR_WIDTH / 2; // Максимальная шир
 var LOCATION_Y_START = 130;
 var LOCATION_Y_END = 630;
 
-var ESC__KEYCODE = 27;
+/* var ESC__KEYCODE = 27; */ // eslint ругается
 var ENTER__KEYCODE = 13;
 
 var offerTypes = {
@@ -92,7 +92,7 @@ var validateForm = function () {
   var roomsSelect = mainForm.querySelector('#room_number');
   var choosenCapacity = capacitySelect.options[capacitySelect.selectedIndex].value;
   var choosenRooms = roomsSelect.options[roomsSelect.selectedIndex].value;
-  mainForm.addEventListener('invalid', function (evt) {
+  mainForm.addEventListener('invalid', function (/* evt */) { // линтер
     if (choosenCapacity > choosenRooms) {
       choosenCapacity.setCustomValidity('Количество гостей не совпадает с количеством комнат');
     }
@@ -155,8 +155,8 @@ var generatePins = function (num) {
 
 
 var getPin = function (props) {
-  var pinTemplate = document.querySelector("#pin").content
-    .querySelector(".map__pin").cloneNode(true);
+  var pinTemplate = document.querySelector('#pin').content
+    .querySelector('.map__pin').cloneNode(true);
   pinTemplate.style.left = (props.location.x - AVATAR_WIDTH / 2) + 'px';
   pinTemplate.style.top = (props.location.x - AVATAR_HEIGHT) + 'px';
   pinTemplate.querySelector('img').src = props.author.avatar;
