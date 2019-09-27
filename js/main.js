@@ -7,6 +7,8 @@ var LOCATION_X_END = 1200 - AVATAR_WIDTH / 2; // Максимальная шир
 var LOCATION_Y_START = 130;
 var LOCATION_Y_END = 630;
 
+var ESC__KEYCODE = 27;
+var ENTER__KEYCODE = 13;
 
 var offerTypes = {
   'palace': 'Дворец',
@@ -27,9 +29,8 @@ var PHOTOS = [
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
 
-var activatePage = function () {
-  document.querySelector('.map').classList.remove('map--faded');
-};
+var map = document.querySelector('.map');
+var mainPin = document.querySelector('.map__pin--main');
 
 var shuffleArray = function (array) {
   var tempArray = array.slice();
@@ -57,6 +58,66 @@ var getRandomNumber = function (number) {
 var getRandomElementFromArray = function (array) {
   return array[getRandomNumber(array.length - 1)];
 };
+
+var setStartStateOfPage = function () {
+  var inputArray = document.querySelectorAll('fieldset');
+  inputArray.forEach(function (item) {
+    item.setAttribute('disabled', 'disabled');
+  });
+  return inputArray;
+};
+
+setStartStateOfPage();
+
+var activatePage = function () {
+  map.classList.remove('map--faded');
+  var inputArray = document.querySelectorAll('fieldset');
+  inputArray.forEach(function (item) {
+    item.removeAttribute('disabled', 'disabled');
+  });
+  return inputArray;
+};
+
+/* var addressField = map.querySelector('input[name=address]'); */
+
+var fillAddressField = function () {
+  var addressField = document.querySelector('#address');
+  addressField.value = mainPin.style.left.slice(0, 3) + ', ' + mainPin.style.top.slice(0, 3);
+  return addressField;
+};
+
+var validateForm = function () {
+  var mainForm = document.querySelector('.ad-form');
+  var capacitySelect = mainForm.querySelector('#capacity');
+  var roomsSelect = mainForm.querySelector('#room_number');
+  var choosenCapacity = capacitySelect.options[capacitySelect.selectedIndex].value;
+  var choosenRooms = roomsSelect.options[roomsSelect.selectedIndex].value;
+  mainForm.addEventListener('invalid', function (evt) {
+    if (choosenCapacity > choosenRooms) {
+      choosenCapacity.setCustomValidity('Количество гостей не совпадает с количеством комнат');
+    }
+    return;
+  });
+  /* console.log(choosenCapacity < choosenRooms);
+  console.log(choosenCapacity);
+  console.log(choosenRooms); */
+  return mainForm;
+};
+
+validateForm();
+
+mainPin.addEventListener('mousedown', function () {
+  activatePage();
+  fillAddressField();
+});
+
+mainPin.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER__KEYCODE) {
+    activatePage();
+    fillAddressField();
+  }
+});
+
 
 var generatePins = function (num) {
   var arrayTemplate = [];
@@ -157,6 +218,3 @@ var renderCard = function (cardElement) {
 var pins = generatePins(8);
 renderPins(pins);
 renderCard(pins[0]);
-activatePage();
-
-
