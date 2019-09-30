@@ -35,6 +35,7 @@ var PHOTOS = [
 
 var mainPin = document.querySelector('.map__pin--main');
 var adForm = document.querySelector('.ad-form');
+var addressField = document.querySelector('#address');
 
 var shuffleArray = function (array) {
   var tempArray = array.slice();
@@ -64,7 +65,8 @@ var getRandomElementFromArray = function (array) {
 };
 
 var setStartStateOfPage = function () {
-  disableForm();
+  disableMainForm();
+  disableHeaderForm();
   muteMap();
   getCoordinatesMainPin();
 };
@@ -76,14 +78,29 @@ var activatePage = function () {
   renderPins(pins);
   renderCard(pins[0]);
   activateForm();
+  activateHeaderForm();
 };
 
-var disableForm = function () {
+var setActivatePage = function (evt) {
+  if (evt.keyCode === ENTER__KEYCODE) {
+    activatePage();
+  }
+};
+
+var disableMainForm = function () {
   var inputArray = document.querySelectorAll('fieldset');
   inputArray.forEach(function (item) {
     item.setAttribute('disabled', true);
   });
   return inputArray;
+};
+
+var disableHeaderForm = function () {
+  var selectArray = document.querySelectorAll('select');
+  selectArray.forEach(function (item) {
+    item.setAttribute('disabled', true);
+  });
+  return selectArray;
 };
 
 var activateForm = function () {
@@ -94,8 +111,17 @@ var activateForm = function () {
   return inputArray;
 };
 
+var activateHeaderForm = function () {
+  var selectArray = document.querySelectorAll('select');
+  selectArray.forEach(function (item) {
+    item.removeAttribute('disabled');
+  });
+  return selectArray;
+};
+
 var clearMap = function () {
   document.querySelector('.map').classList.remove('map--faded');
+  document.querySelector('.ad-form').classList.remove('ad-form--disabled');
 };
 
 var muteMap = function () {
@@ -103,29 +129,21 @@ var muteMap = function () {
 };
 
 var getCoordinatesMainPin = function () {
-  var addressField = document.querySelector('#address');
-  var x = parseInt(mainPin.style.left.slice(0, 3), 10) + MAIN_PIN_WIDTH / 2;
-  var y = parseInt(mainPin.style.top.slice(0, 3), 10) + MAIN_PIN_HEIGHT / 2;
+  var x = parseInt(mainPin.style.left, 10) + MAIN_PIN_WIDTH / 2;
+  var y = parseInt(mainPin.style.top, 10) + MAIN_PIN_HEIGHT / 2;
   addressField.value = x + ', ' + y;
 };
 
 
 var fillAddressField = function () {
-  var addressField = document.querySelector('#address');
-  var x = parseInt(mainPin.style.left.slice(0, 3), 10) + MAIN_PIN_WIDTH / 2;
-  var y = parseInt(mainPin.style.top.slice(0, 3), 10) + MAIN_PIN_HEIGHT_W_POINTER;
+  var x = parseInt(mainPin.style.left, 10) + MAIN_PIN_WIDTH / 2;
+  var y = parseInt(mainPin.style.top, 10) + MAIN_PIN_HEIGHT_W_POINTER;
   addressField.value = x + ', ' + y;
 };
 
-mainPin.addEventListener('mousedown', function () {
-  activatePage();
-});
+mainPin.addEventListener('mousedown', activatePage);
 
-mainPin.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === ENTER__KEYCODE) {
-    activatePage();
-  }
-});
+mainPin.addEventListener('keydown', setActivatePage);
 
 var generatePins = function (num) {
   var arrayTemplate = [];
