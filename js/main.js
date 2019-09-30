@@ -281,5 +281,12 @@ var onFormChange = function (e) {
   }
 };
 
+var preValidate = function () {
+  Object.values(validatorsMap).forEach(function (fn) {
+    fn();
+  });
+};
+
 var pins = generatePins(8);
 setStartStateOfPage();
+preValidate();
