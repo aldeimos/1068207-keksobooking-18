@@ -11,7 +11,7 @@ var MAIN_PIN_WIDTH = 62;
 var MAIN_PIN_HEIGHT = 62;
 var MAIN_PIN_HEIGHT_W_POINTER = MAIN_PIN_HEIGHT + 22;
 
-/* var ESC__KEYCODE = 27; */ // eslint ругается
+var ESC__KEYCODE = 27;
 var ENTER__KEYCODE = 13;
 
 var offerTypes = {
@@ -36,6 +36,9 @@ var PHOTOS = [
 var mainPin = document.querySelector('.map__pin--main');
 var adForm = document.querySelector('.ad-form');
 var addressField = document.querySelector('#address');
+
+var inputPrice = adForm.querySelector('#price');
+var typeSelect = adForm.querySelector('#type');
 
 var shuffleArray = function (array) {
   var tempArray = array.slice();
@@ -76,9 +79,38 @@ var activatePage = function () {
   fillAddressField();
   setValidation();
   renderPins(pins);
-  renderCard(pins[0]);
+  renderCard(pins);
   activateForm();
   activateHeaderForm();
+};
+
+
+var onButtonCloseClick = function () {
+  var buttons = document.querySelectorAll('.popup__close');
+  buttons.forEach(function (item) {
+    item.parentElement.style.display = 'none';
+  });
+};
+
+var onEscClosePopup = function (evt) {
+  var buttons = document.querySelectorAll('.popup__close');
+  buttons.forEach(function (item) {
+    if (evt.keyCode === ESC__KEYCODE) {
+      item.parentElement.style.display = 'none';
+    }
+  });
+};
+
+var onPinClick = function (evt) {
+  var card = document.querySelectorAll('.map__card');
+  var pinTemplateLeft = parseInt(evt.target.style.left, 10);
+  var pinTemplateTop = parseInt(evt.target.style.top, 10);
+  var pinTemplateBoth = pinTemplateLeft + ', ' + pinTemplateTop;
+  card.forEach(function (item) {
+    if (pinTemplateBoth === item.querySelector('.popup__text--address').textContent) {
+      item.style.display = 'block';
+    }
+  });
 };
 
 var setActivatePage = function (evt) {
@@ -145,6 +177,8 @@ mainPin.addEventListener('mousedown', activatePage);
 
 mainPin.addEventListener('keydown', setActivatePage);
 
+document.addEventListener('keydown', onEscClosePopup);
+
 var generatePins = function (num) {
   var arrayTemplate = [];
   for (var i = 1; i <= num; i++) {
@@ -189,8 +223,10 @@ var getPin = function (props) {
   pinTemplate.querySelector('img').alt = props.author.title;
   pinTemplate.style.left = props.location.x + 'px';
   pinTemplate.style.top = props.location.y + 'px';
+  pinTemplate.addEventListener('click', onPinClick);
   return pinTemplate;
 };
+
 
 var renderPins = function (pins) {
   var mapPins = document.querySelector('.map__pins');
@@ -231,14 +267,17 @@ var getCard = function (pinElement) {
     cardTemplate.querySelector('.popup__photos').appendChild(popupPhoto);
   });
   cardTemplate.querySelector('.popup__avatar').src = pinElement.author.avatar;
+  cardTemplate.style.display = 'none';
+  cardTemplate.querySelector('.popup__close').addEventListener('click', onButtonCloseClick);
   return cardTemplate;
 };
 
 var renderCard = function (cardElement) {
-  var cardFragment = document.createDocumentFragment();
-  cardFragment.appendChild(getCard(cardElement));
-  document.querySelector('.map').appendChild(cardFragment);
-
+  cardElement.forEach(function (item) {
+    var cardFragment = document.createDocumentFragment();
+    cardFragment.appendChild(getCard(item));
+    document.querySelector('.map').appendChild(cardFragment);
+  });
 };
 
 var setValidation = function () {
@@ -279,14 +318,70 @@ var onFormChange = function (e) {
   if (e.target.id && e.target.id in validatorsMap) {
     validatorsMap[e.target.id]();
   }
+  validateTypes();
 };
+
+var validateTypes = function () {
+  var selectedOption = typeSelect.value;
+  var arrayObjTypes = [
+    {
+      type1: {
+        type: 'palace',
+        value: 10000
+      },
+      type2: {
+        type: 'house',
+        value: 5000
+      },
+      type3: {
+        type: 'flat',
+        value: 1000
+      },
+      type4: {
+        type: 'bungalo',
+        value: 0
+      }
+    }
+  ];
+  if (selectedOption === arrayObjTypes[0].type1.type) {
+    inputPrice.min = arrayObjTypes[0].type1.value;
+    inputPrice.placeholder = arrayObjTypes[0].type1.value;
+  } else if (selectedOption === arrayObjTypes[0].type2.type) {
+    inputPrice.min = arrayObjTypes[0].type2.value;
+    inputPrice.placeholder = arrayObjTypes[0].type2.value;
+  } else if (selectedOption === arrayObjTypes[0].type3.type) {
+    inputPrice.min = arrayObjTypes[0].type3.value;
+    inputPrice.placeholder = arrayObjTypes[0].type3.value;
+  } else {
+    inputPrice.min = arrayObjTypes[0].type4.value;
+    inputPrice.placeholder = arrayObjTypes[0].type4.value;
+  }
+};
+
+var selectTimeIn = adForm.querySelector('#timein');
+var selectTimeOut = adForm.querySelector('#timeout');
+var onSelectTimeInChange = function () {
+  selectTimeOut.value = selectTimeIn.value;
+};
+
+var onSelectTimeOutChange = function () {
+  selectTimeIn.value = selectTimeOut.value;
+};
+
+selectTimeIn.addEventListener('change', onSelectTimeInChange);
+selectTimeOut.addEventListener('change', onSelectTimeOutChange);
+
 
 var preValidate = function () {
   Object.values(validatorsMap).forEach(function (fn) {
     fn();
   });
+  inputPrice.min = 0;
+  inputPrice.placeholder = 0;
+  typeSelect.value = 'bungalo';
 };
 
 var pins = generatePins(8);
 setStartStateOfPage();
 preValidate();
+
