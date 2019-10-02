@@ -90,6 +90,7 @@ var onButtonCloseClick = function () {
   buttons.forEach(function (item) {
     item.parentElement.style.display = 'none';
   });
+  document.removeEventListener('keydown', onEscClosePopup);
 };
 
 var onEscClosePopup = function (evt) {
@@ -111,6 +112,7 @@ var onPinClick = function (evt) {
       item.style.display = 'block';
     }
   });
+  document.addEventListener('keydown', onEscClosePopup);
 };
 
 var setActivatePage = function (evt) {
@@ -176,8 +178,6 @@ var fillAddressField = function () {
 mainPin.addEventListener('mousedown', activatePage);
 
 mainPin.addEventListener('keydown', setActivatePage);
-
-document.addEventListener('keydown', onEscClosePopup);
 
 var generatePins = function (num) {
   var arrayTemplate = [];
