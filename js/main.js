@@ -79,7 +79,6 @@ var activatePage = function () {
   fillAddressField();
   setValidation();
   renderPins(pins);
-  renderCard(pins);
   activateForm();
   activateHeaderForm();
 };
@@ -97,22 +96,9 @@ var onEscClosePopup = function (evt) {
   var buttons = document.querySelectorAll('.popup__close');
   buttons.forEach(function (item) {
     if (evt.keyCode === ESC__KEYCODE) {
-      item.parentElement.style.display = 'none';
+      item.parentElement.remove();
     }
   });
-};
-
-var onPinClick = function (evt) {
-  var card = document.querySelectorAll('.map__card');
-  var pinTemplateLeft = parseInt(evt.target.style.left, 10);
-  var pinTemplateTop = parseInt(evt.target.style.top, 10);
-  var pinTemplateBoth = pinTemplateLeft + ', ' + pinTemplateTop;
-  card.forEach(function (item) {
-    if (pinTemplateBoth === item.querySelector('.popup__text--address').textContent) {
-      item.style.display = 'block';
-    }
-  });
-  document.addEventListener('keydown', onEscClosePopup);
 };
 
 var setActivatePage = function (evt) {
@@ -214,31 +200,35 @@ var generatePins = function (num) {
 };
 
 
-var getPin = function (props) {
+var getPin = function (props) { // в качестве аргумента элемент (объект) массива pins
   var pinTemplate = document.querySelector('#pin').content
     .querySelector('.map__pin').cloneNode(true);
-  pinTemplate.style.left = (props.location.x - AVATAR_WIDTH / 2) + 'px';
-  pinTemplate.style.top = (props.location.x - AVATAR_HEIGHT) + 'px';
+  /* pinTemplate.style.left = (props.location.x - AVATAR_WIDTH / 2) + 'px';
+  pinTemplate.style.top = (props.location.x - AVATAR_HEIGHT) + 'px'; */ // не понимаю, зачем я в этой функции два раза задавал стили координат пина)
   pinTemplate.querySelector('img').src = props.author.avatar;
   pinTemplate.querySelector('img').alt = props.author.title;
   pinTemplate.style.left = props.location.x + 'px';
   pinTemplate.style.top = props.location.y + 'px';
+  var onPinClick = function () {
+    renderCard(props);
+    document.addEventListener('keydown', onEscClosePopup);
+  };
   pinTemplate.addEventListener('click', onPinClick);
   return pinTemplate;
 };
 
 
-var renderPins = function (pins) {
+var renderPins = function (pins) { // принимает массив объектов
   var mapPins = document.querySelector('.map__pins');
   var fragment = document.createDocumentFragment();
   pins.forEach(function (pin) {
-    fragment.appendChild(getPin(pin));
+    fragment.appendChild(getPin(pin)); // в качестве аргумента элемент (объект) массива pins
   });
   mapPins.appendChild(fragment);
 };
 
 
-var getCard = function (pinElement) {
+var getCard = function (pinElement) { // в качестве аргумента функции getCard элемент массива pins
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card').cloneNode(true);
   cardTemplate.querySelector('.popup__title').textContent = pinElement.offer.title;
   cardTemplate.querySelector('.popup__text--address').textContent = pinElement.offer.address;
@@ -267,17 +257,14 @@ var getCard = function (pinElement) {
     cardTemplate.querySelector('.popup__photos').appendChild(popupPhoto);
   });
   cardTemplate.querySelector('.popup__avatar').src = pinElement.author.avatar;
-  cardTemplate.style.display = 'none';
   cardTemplate.querySelector('.popup__close').addEventListener('click', onButtonCloseClick);
   return cardTemplate;
 };
 
-var renderCard = function (cardElement) {
-  cardElement.forEach(function (item) {
-    var cardFragment = document.createDocumentFragment();
-    cardFragment.appendChild(getCard(item));
-    document.querySelector('.map').appendChild(cardFragment);
-  });
+var renderCard = function (cardElement) { // сюда передаем массив объектов
+  var cardFragment = document.createDocumentFragment();
+  cardFragment.appendChild(getCard(cardElement)); // в качестве аргумента функции getCard элемент массива
+  document.querySelector('.map').appendChild(cardFragment);
 };
 
 var setValidation = function () {
@@ -322,40 +309,16 @@ var onFormChange = function (e) {
 };
 
 var validateTypes = function () {
-  var selectedOption = typeSelect.value;
-  var arrayObjTypes = [
+  var selectedOption = typeSelect.value; // выбранный option селекта type
+  var arrayObjTypes =
     {
-      type1: {
-        type: 'palace',
-        value: 10000
-      },
-      type2: {
-        type: 'house',
-        value: 5000
-      },
-      type3: {
-        type: 'flat',
-        value: 1000
-      },
-      type4: {
-        type: 'bungalo',
-        value: 0
-      }
-    }
-  ];
-  if (selectedOption === arrayObjTypes[0].type1.type) {
-    inputPrice.min = arrayObjTypes[0].type1.value;
-    inputPrice.placeholder = arrayObjTypes[0].type1.value;
-  } else if (selectedOption === arrayObjTypes[0].type2.type) {
-    inputPrice.min = arrayObjTypes[0].type2.value;
-    inputPrice.placeholder = arrayObjTypes[0].type2.value;
-  } else if (selectedOption === arrayObjTypes[0].type3.type) {
-    inputPrice.min = arrayObjTypes[0].type3.value;
-    inputPrice.placeholder = arrayObjTypes[0].type3.value;
-  } else {
-    inputPrice.min = arrayObjTypes[0].type4.value;
-    inputPrice.placeholder = arrayObjTypes[0].type4.value;
-  }
+      'palace': 10000,
+      'house': 5000,
+      'flat': 1000,
+      'bungalo': 0,
+    };
+  inputPrice.min = arrayObjTypes[selectedOption]; // Тут мы проходимся по словарю с помощью значения, которое получили из selectedOption и по нему задаем значения ипнутов
+  inputPrice.placeholder = arrayObjTypes[selectedOption];
 };
 
 var selectTimeIn = adForm.querySelector('#timein');
@@ -376,9 +339,6 @@ var preValidate = function () {
   Object.values(validatorsMap).forEach(function (fn) {
     fn();
   });
-  inputPrice.min = 0;
-  inputPrice.placeholder = 0;
-  typeSelect.value = 'bungalo';
 };
 
 var pins = generatePins(8);
