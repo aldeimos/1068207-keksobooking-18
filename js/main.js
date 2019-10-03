@@ -1,7 +1,7 @@
 'use strict';
 
 var AVATAR_WIDTH = 50;
-var AVATAR_HEIGHT = 70;
+/* var AVATAR_HEIGHT = 70; */
 var LOCATION_X_START = AVATAR_WIDTH / 2;
 var LOCATION_X_END = 1200 - AVATAR_WIDTH / 2; // Максимальная ширина <body>
 var LOCATION_Y_START = 130;
