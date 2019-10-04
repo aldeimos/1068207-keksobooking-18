@@ -81,13 +81,15 @@ var activatePage = function () {
   renderPins(pins);
   activateForm();
   activateHeaderForm();
+  mainPin.removeEventListener('mousedown', activatePage);
+  mainPin.removeEventListener('keydown', setActivatePage);
 };
 
 
 var onButtonCloseClick = function () {
   var buttons = document.querySelectorAll('.popup__close');
   buttons.forEach(function (item) {
-    item.parentElement.style.display = 'none';
+    item.parentElement.remove();
   });
   document.removeEventListener('keydown', onEscClosePopup);
 };
@@ -97,6 +99,7 @@ var onEscClosePopup = function (evt) {
   buttons.forEach(function (item) {
     if (evt.keyCode === ESC__KEYCODE) {
       item.parentElement.remove();
+      document.removeEventListener('keydown', onEscClosePopup);
     }
   });
 };
@@ -174,7 +177,7 @@ var generatePins = function (num) {
       },
       offer: {
         title: 'Квартира',
-        address: 's',
+        address: '',
         price: 250,
         type: getRandomElementFromArray(offerTypesArray),
         rooms: randomIntFromInterval(1, 4),
@@ -189,11 +192,8 @@ var generatePins = function (num) {
         x: randomIntFromInterval(LOCATION_X_START, LOCATION_X_END),
         y: randomIntFromInterval(LOCATION_Y_START, LOCATION_Y_END) // 130 - 600
       },
-      getAddressEqualToLocation: function () {
-        objectTemplate.offer.address = objectTemplate.location.x + ', ' + objectTemplate.location.y;
-      }
     };
-    objectTemplate.getAddressEqualToLocation();
+    objectTemplate.offer.address = objectTemplate.location.x + ', ' + objectTemplate.location.y;
     arrayTemplate.push(objectTemplate);
   }
   return arrayTemplate;
@@ -210,6 +210,9 @@ var getPin = function (props) { // в качестве аргумента эле
   pinTemplate.style.left = props.location.x + 'px';
   pinTemplate.style.top = props.location.y + 'px';
   var onPinClick = function () {
+    if (document.querySelector('.map__card')) {
+      document.querySelector('.map__card').remove();
+    }
     renderCard(props);
     document.addEventListener('keydown', onEscClosePopup);
   };
@@ -228,7 +231,7 @@ var renderPins = function (pins) { // принимает массив объек
 };
 
 
-var getCard = function (pinElement) { // в качестве аргумента функции getCard элемент массива pins
+var getCard = function (pinElement) { // в качестве аргумента функции getCard -  элемент массива pins
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card').cloneNode(true);
   cardTemplate.querySelector('.popup__title').textContent = pinElement.offer.title;
   cardTemplate.querySelector('.popup__text--address').textContent = pinElement.offer.address;
@@ -344,4 +347,5 @@ var preValidate = function () {
 var pins = generatePins(8);
 setStartStateOfPage();
 preValidate();
+
 
