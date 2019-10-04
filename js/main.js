@@ -171,13 +171,15 @@ mainPin.addEventListener('keydown', setActivatePage);
 var generatePins = function (num) {
   var arrayTemplate = [];
   for (var i = 1; i <= num; i++) {
+    var randomX = randomIntFromInterval(LOCATION_X_START, LOCATION_X_END);
+    var randomY = randomIntFromInterval(LOCATION_Y_START, LOCATION_Y_END);
     var objectTemplate = {
       author: {
         avatar: 'img/avatars/user0' + i + '.png'
       },
       offer: {
         title: 'Квартира',
-        address: '',
+        address: randomX + ', ' + randomY,
         price: 250,
         type: getRandomElementFromArray(offerTypesArray),
         rooms: randomIntFromInterval(1, 4),
@@ -189,11 +191,10 @@ var generatePins = function (num) {
         photos: getArrayWithRandomLength(PHOTOS)
       },
       location: {
-        x: randomIntFromInterval(LOCATION_X_START, LOCATION_X_END),
-        y: randomIntFromInterval(LOCATION_Y_START, LOCATION_Y_END) // 130 - 600
+        x: randomX,
+        y: randomY
       },
     };
-    objectTemplate.offer.address = objectTemplate.location.x + ', ' + objectTemplate.location.y;
     arrayTemplate.push(objectTemplate);
   }
   return arrayTemplate;
@@ -231,27 +232,27 @@ var renderPins = function (pins) { // принимает массив объек
 };
 
 
-var getCard = function (pinElement) { // в качестве аргумента функции getCard -  элемент массива pins
+var getCard = function (props) { // в качестве аргумента функции getCard -  элемент массива pins
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card').cloneNode(true);
-  cardTemplate.querySelector('.popup__title').textContent = pinElement.offer.title;
-  cardTemplate.querySelector('.popup__text--address').textContent = pinElement.offer.address;
-  cardTemplate.querySelector('.popup__text--price').innerHTML = pinElement.offer.price + '<span>₽/ночь</span>';
-  cardTemplate.querySelector('.popup__type').innerHTML = offerTypes[pinElement.offer.type];
-  cardTemplate.querySelector('.popup__text--capacity').textContent = pinElement.offer.rooms + ' комнаты для ' + pinElement.offer.guests + ' гостей.';
-  cardTemplate.querySelector('.popup__text--time').textContent = 'Заезд после ' + pinElement.offer.checkin + ', ' + 'выезд до ' + pinElement.offer.checkout;
+  cardTemplate.querySelector('.popup__title').textContent = props.offer.title;
+  cardTemplate.querySelector('.popup__text--address').textContent = props.offer.address;
+  cardTemplate.querySelector('.popup__text--price').innerHTML = props.offer.price + '<span>₽/ночь</span>';
+  cardTemplate.querySelector('.popup__type').innerHTML = offerTypes[props.offer.type];
+  cardTemplate.querySelector('.popup__text--capacity').textContent = props.offer.rooms + ' комнаты для ' + props.offer.guests + ' гостей.';
+  cardTemplate.querySelector('.popup__text--time').textContent = 'Заезд после ' + props.offer.checkin + ', ' + 'выезд до ' + props.offer.checkout;
   cardTemplate.querySelector('.popup__features').innerHTML = '';
 
-  pinElement.offer.features.forEach(function (item) {
+  props.offer.features.forEach(function (item) {
     var popupFeature = document.createElement('li');
     popupFeature.classList.add('popup__feature', 'popup__feature--' + item);
     popupFeature.textContent = item;
     cardTemplate.querySelector('.popup__features').appendChild(popupFeature);
   });
 
-  cardTemplate.querySelector('.popup__description').textContent = pinElement.offer.description;
+  cardTemplate.querySelector('.popup__description').textContent = props.offer.description;
 
   cardTemplate.querySelector('.popup__photos').innerHTML = '';
-  pinElement.offer.photos.forEach(function (item) {
+  props.offer.photos.forEach(function (item) {
     var popupPhoto = document.createElement('img');
     popupPhoto.classList.add('popup__photo');
     popupPhoto.src = item;
@@ -259,15 +260,13 @@ var getCard = function (pinElement) { // в качестве аргумента 
     popupPhoto.style.height = 40 + 'px';
     cardTemplate.querySelector('.popup__photos').appendChild(popupPhoto);
   });
-  cardTemplate.querySelector('.popup__avatar').src = pinElement.author.avatar;
+  cardTemplate.querySelector('.popup__avatar').src = props.author.avatar;
   cardTemplate.querySelector('.popup__close').addEventListener('click', onButtonCloseClick);
   return cardTemplate;
 };
 
 var renderCard = function (cardElement) { // сюда передаем массив объектов
-  var cardFragment = document.createDocumentFragment();
-  cardFragment.appendChild(getCard(cardElement)); // в качестве аргумента функции getCard элемент массива
-  document.querySelector('.map').appendChild(cardFragment);
+  document.querySelector('.map').appendChild(getCard(cardElement));
 };
 
 var setValidation = function () {
