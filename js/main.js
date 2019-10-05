@@ -1,7 +1,7 @@
 'use strict';
 
 var AVATAR_WIDTH = 50;
-var AVATAR_HEIGHT = 70;
+/* var AVATAR_HEIGHT = 70; */
 var LOCATION_X_START = AVATAR_WIDTH / 2;
 var LOCATION_X_END = 1200 - AVATAR_WIDTH / 2; // Максимальная ширина <body>
 var LOCATION_Y_START = 130;
@@ -11,7 +11,7 @@ var MAIN_PIN_WIDTH = 62;
 var MAIN_PIN_HEIGHT = 62;
 var MAIN_PIN_HEIGHT_W_POINTER = MAIN_PIN_HEIGHT + 22;
 
-/* var ESC__KEYCODE = 27; */ // eslint ругается
+var ESC__KEYCODE = 27;
 var ENTER__KEYCODE = 13;
 
 var offerTypes = {
@@ -36,6 +36,9 @@ var PHOTOS = [
 var mainPin = document.querySelector('.map__pin--main');
 var adForm = document.querySelector('.ad-form');
 var addressField = document.querySelector('#address');
+
+var inputPrice = adForm.querySelector('#price');
+var typeSelect = adForm.querySelector('#type');
 
 var shuffleArray = function (array) {
   var tempArray = array.slice();
@@ -76,9 +79,29 @@ var activatePage = function () {
   fillAddressField();
   setValidation();
   renderPins(pins);
-  renderCard(pins[0]);
   activateForm();
   activateHeaderForm();
+  mainPin.removeEventListener('mousedown', activatePage);
+  mainPin.removeEventListener('keydown', setActivatePage);
+};
+
+
+var onButtonCloseClick = function () {
+  var buttons = document.querySelectorAll('.popup__close');
+  buttons.forEach(function (item) {
+    item.parentElement.remove();
+  });
+  document.removeEventListener('keydown', onEscClosePopup);
+};
+
+var onEscClosePopup = function (evt) {
+  var buttons = document.querySelectorAll('.popup__close');
+  buttons.forEach(function (item) {
+    if (evt.keyCode === ESC__KEYCODE) {
+      item.parentElement.remove();
+      document.removeEventListener('keydown', onEscClosePopup);
+    }
+  });
 };
 
 var setActivatePage = function (evt) {
@@ -148,13 +171,15 @@ mainPin.addEventListener('keydown', setActivatePage);
 var generatePins = function (num) {
   var arrayTemplate = [];
   for (var i = 1; i <= num; i++) {
+    var randomX = randomIntFromInterval(LOCATION_X_START, LOCATION_X_END);
+    var randomY = randomIntFromInterval(LOCATION_Y_START, LOCATION_Y_END);
     var objectTemplate = {
       author: {
         avatar: 'img/avatars/user0' + i + '.png'
       },
       offer: {
         title: 'Квартира',
-        address: 's',
+        address: randomX + ', ' + randomY,
         price: 250,
         type: getRandomElementFromArray(offerTypesArray),
         rooms: randomIntFromInterval(1, 4),
@@ -166,63 +191,67 @@ var generatePins = function (num) {
         photos: getArrayWithRandomLength(PHOTOS)
       },
       location: {
-        x: randomIntFromInterval(LOCATION_X_START, LOCATION_X_END),
-        y: randomIntFromInterval(LOCATION_Y_START, LOCATION_Y_END) // 130 - 600
+        x: randomX,
+        y: randomY
       },
-      getAddressEqualToLocation: function () {
-        objectTemplate.offer.address = objectTemplate.location.x + ', ' + objectTemplate.location.y;
-      }
     };
-    objectTemplate.getAddressEqualToLocation();
     arrayTemplate.push(objectTemplate);
   }
   return arrayTemplate;
 };
 
 
-var getPin = function (props) {
+var getPin = function (props) { // в качестве аргумента элемент (объект) массива pins
   var pinTemplate = document.querySelector('#pin').content
     .querySelector('.map__pin').cloneNode(true);
-  pinTemplate.style.left = (props.location.x - AVATAR_WIDTH / 2) + 'px';
-  pinTemplate.style.top = (props.location.x - AVATAR_HEIGHT) + 'px';
+  /* pinTemplate.style.left = (props.location.x - AVATAR_WIDTH / 2) + 'px';
+  pinTemplate.style.top = (props.location.x - AVATAR_HEIGHT) + 'px'; */ // не понимаю, зачем я в этой функции два раза задавал стили координат пина)
   pinTemplate.querySelector('img').src = props.author.avatar;
   pinTemplate.querySelector('img').alt = props.author.title;
   pinTemplate.style.left = props.location.x + 'px';
   pinTemplate.style.top = props.location.y + 'px';
+  var onPinClick = function () {
+    if (document.querySelector('.map__card')) {
+      document.querySelector('.map__card').remove();
+    }
+    renderCard(props);
+    document.addEventListener('keydown', onEscClosePopup);
+  };
+  pinTemplate.addEventListener('click', onPinClick);
   return pinTemplate;
 };
 
-var renderPins = function (pins) {
+
+var renderPins = function (pins) { // принимает массив объектов
   var mapPins = document.querySelector('.map__pins');
   var fragment = document.createDocumentFragment();
   pins.forEach(function (pin) {
-    fragment.appendChild(getPin(pin));
+    fragment.appendChild(getPin(pin)); // в качестве аргумента элемент (объект) массива pins
   });
   mapPins.appendChild(fragment);
 };
 
-
-var getCard = function (pinElement) {
+var renderCard = function (props) { // сюда передаем массив объектов
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card').cloneNode(true);
-  cardTemplate.querySelector('.popup__title').textContent = pinElement.offer.title;
-  cardTemplate.querySelector('.popup__text--address').textContent = pinElement.offer.address;
-  cardTemplate.querySelector('.popup__text--price').innerHTML = pinElement.offer.price + '<span>₽/ночь</span>';
-  cardTemplate.querySelector('.popup__type').innerHTML = offerTypes[pinElement.offer.type];
-  cardTemplate.querySelector('.popup__text--capacity').textContent = pinElement.offer.rooms + ' комнаты для ' + pinElement.offer.guests + ' гостей.';
-  cardTemplate.querySelector('.popup__text--time').textContent = 'Заезд после ' + pinElement.offer.checkin + ', ' + 'выезд до ' + pinElement.offer.checkout;
+  cardTemplate.querySelector('.popup__title').textContent = props.offer.title;
+  cardTemplate.querySelector('.popup__text--address').textContent = props.offer.address;
+  cardTemplate.querySelector('.popup__text--price').innerHTML = props.offer.price + '<span>₽/ночь</span>';
+  cardTemplate.querySelector('.popup__type').innerHTML = offerTypes[props.offer.type];
+  cardTemplate.querySelector('.popup__text--capacity').textContent = props.offer.rooms + ' комнаты для ' + props.offer.guests + ' гостей.';
+  cardTemplate.querySelector('.popup__text--time').textContent = 'Заезд после ' + props.offer.checkin + ', ' + 'выезд до ' + props.offer.checkout;
   cardTemplate.querySelector('.popup__features').innerHTML = '';
 
-  pinElement.offer.features.forEach(function (item) {
+  props.offer.features.forEach(function (item) {
     var popupFeature = document.createElement('li');
     popupFeature.classList.add('popup__feature', 'popup__feature--' + item);
     popupFeature.textContent = item;
     cardTemplate.querySelector('.popup__features').appendChild(popupFeature);
   });
 
-  cardTemplate.querySelector('.popup__description').textContent = pinElement.offer.description;
+  cardTemplate.querySelector('.popup__description').textContent = props.offer.description;
 
   cardTemplate.querySelector('.popup__photos').innerHTML = '';
-  pinElement.offer.photos.forEach(function (item) {
+  props.offer.photos.forEach(function (item) {
     var popupPhoto = document.createElement('img');
     popupPhoto.classList.add('popup__photo');
     popupPhoto.src = item;
@@ -230,15 +259,9 @@ var getCard = function (pinElement) {
     popupPhoto.style.height = 40 + 'px';
     cardTemplate.querySelector('.popup__photos').appendChild(popupPhoto);
   });
-  cardTemplate.querySelector('.popup__avatar').src = pinElement.author.avatar;
-  return cardTemplate;
-};
-
-var renderCard = function (cardElement) {
-  var cardFragment = document.createDocumentFragment();
-  cardFragment.appendChild(getCard(cardElement));
-  document.querySelector('.map').appendChild(cardFragment);
-
+  cardTemplate.querySelector('.popup__avatar').src = props.author.avatar;
+  cardTemplate.querySelector('.popup__close').addEventListener('click', onButtonCloseClick);
+  document.querySelector('.map').appendChild(cardTemplate);
 };
 
 var setValidation = function () {
@@ -279,7 +302,35 @@ var onFormChange = function (e) {
   if (e.target.id && e.target.id in validatorsMap) {
     validatorsMap[e.target.id]();
   }
+  validateTypes();
 };
+
+var validateTypes = function () {
+  var selectedOption = typeSelect.value; // выбранный option селекта type
+  var arrayObjTypes =
+    {
+      'palace': 10000,
+      'house': 5000,
+      'flat': 1000,
+      'bungalo': 0,
+    };
+  inputPrice.min = arrayObjTypes[selectedOption]; // Тут мы проходимся по словарю с помощью значения, которое получили из selectedOption и по нему задаем значения ипнутов
+  inputPrice.placeholder = arrayObjTypes[selectedOption];
+};
+
+var selectTimeIn = adForm.querySelector('#timein');
+var selectTimeOut = adForm.querySelector('#timeout');
+var onSelectTimeInChange = function () {
+  selectTimeOut.value = selectTimeIn.value;
+};
+
+var onSelectTimeOutChange = function () {
+  selectTimeIn.value = selectTimeOut.value;
+};
+
+selectTimeIn.addEventListener('change', onSelectTimeInChange);
+selectTimeOut.addEventListener('change', onSelectTimeOutChange);
+
 
 var preValidate = function () {
   Object.values(validatorsMap).forEach(function (fn) {
@@ -290,3 +341,5 @@ var preValidate = function () {
 var pins = generatePins(8);
 setStartStateOfPage();
 preValidate();
+
+
