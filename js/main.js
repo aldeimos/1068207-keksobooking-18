@@ -231,8 +231,7 @@ var renderPins = function (pins) { // принимает массив объек
   mapPins.appendChild(fragment);
 };
 
-
-var getCard = function (props) { // в качестве аргумента функции getCard -  элемент массива pins
+var renderCard = function (props) { // сюда передаем массив объектов
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card').cloneNode(true);
   cardTemplate.querySelector('.popup__title').textContent = props.offer.title;
   cardTemplate.querySelector('.popup__text--address').textContent = props.offer.address;
@@ -262,11 +261,7 @@ var getCard = function (props) { // в качестве аргумента фу�
   });
   cardTemplate.querySelector('.popup__avatar').src = props.author.avatar;
   cardTemplate.querySelector('.popup__close').addEventListener('click', onButtonCloseClick);
-  return cardTemplate;
-};
-
-var renderCard = function (cardElement) { // сюда передаем массив объектов
-  document.querySelector('.map').appendChild(getCard(cardElement));
+  return document.querySelector('.map').appendChild(cardTemplate);
 };
 
 var setValidation = function () {
