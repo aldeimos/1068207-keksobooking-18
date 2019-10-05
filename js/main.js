@@ -261,7 +261,7 @@ var renderCard = function (props) { // сюда передаем массив о
   });
   cardTemplate.querySelector('.popup__avatar').src = props.author.avatar;
   cardTemplate.querySelector('.popup__close').addEventListener('click', onButtonCloseClick);
-  return document.querySelector('.map').appendChild(cardTemplate);
+  document.querySelector('.map').appendChild(cardTemplate);
 };
 
 var setValidation = function () {
