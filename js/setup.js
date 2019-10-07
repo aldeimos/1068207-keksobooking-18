@@ -36,13 +36,17 @@
     window.formFunctions.activateForm();
     window.formFunctions.activateHeaderForm();
     window.pinMain.mainPin.removeEventListener('mousedown', window.activatePage);
-    window.pinMain.mainPin.removeEventListener('keydown', setActivatePage);
+    window.pinMain.mainPin.removeEventListener('keydown', window.setActivatePage);
   };
 
-  var setActivatePage = function (evt) {
-    if (evt.keyCode === window.keyCodes.escKeycode) {
+  window.setActivatePage = function (evt) {
+    if (evt.keyCode === window.keyCodes.enterKeycode) {
       window.activatePage();
     }
   };
+
+  window.pinMain.mainPin.addEventListener('mousedown', window.activatePage);
+
+  window.pinMain.mainPin.addEventListener('keydown', window.setActivatePage);
   window.setStartStateOfPage();
 })();

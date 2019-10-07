@@ -12,15 +12,12 @@
   var onEscClosePopup = function (evt) {
     var buttons = document.querySelectorAll('.popup__close');
     buttons.forEach(function (item) {
-      if (evt.keyCode === window.keyCodesESC__KEYCODE) {
+      if (evt.keyCode === window.keyCodes.escKeycode) {
         item.parentElement.remove();
         document.removeEventListener('keydown', onEscClosePopup);
       }
     });
   };
-  window.pinMain.mainPin.addEventListener('mousedown', window.activatePage);
-
-  window.pinMain.mainPin.addEventListener('keydown', window.setActivatePage);
 
   var getPin = function (props) { // в качестве аргумента элемент (объект) массива pins
     var pinTemplate = document.querySelector('#pin').content
