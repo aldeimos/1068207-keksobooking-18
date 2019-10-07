@@ -6,45 +6,46 @@
 
   var inputPrice = adForm.querySelector('#price');
   var typeSelect = adForm.querySelector('#type');
-
-  window.formFunctions = {
-    fillAddressField: function () {
-      var x = parseInt(window.pinMain.mainPin.style.left, 10) + window.pinMain.MAIN_PIN_WIDTH / 2;
-      var y = parseInt(window.pinMain.mainPin.style.top, 10) + window.pinMain.MAIN_PIN_HEIGHT_W_POINTER;
-      addressField.value = x + ', ' + y;
-      return addressField;
-    },
-    disableMainForm: function () {
-      var inputArray = document.querySelectorAll('fieldset');
-      inputArray.forEach(function (item) {
-        item.setAttribute('disabled', true);
-      });
-      return inputArray;
-    },
-    disableHeaderForm: function () {
-      var selectArray = document.querySelectorAll('select');
-      selectArray.forEach(function (item) {
-        item.setAttribute('disabled', true);
-      });
-      return selectArray;
-    },
-    activateForm: function () {
-      var inputArray = document.querySelectorAll('fieldset');
-      inputArray.forEach(function (item) {
-        item.removeAttribute('disabled');
-      });
-      return inputArray;
-    },
-    activateHeaderForm: function () {
-      var selectArray = document.querySelectorAll('select');
-      selectArray.forEach(function (item) {
-        item.removeAttribute('disabled');
-      });
-      return selectArray;
-    },
-    setValidation: function () {
-      adForm.addEventListener('change', onFormChange);
-    }
+  var mainPin = window.map.mainPin;
+  /* var MAIN_PIN_HEIGHT = 62; */
+  var MAIN_PIN_WIDTH = 62;
+  var MAIN_PIN_HEIGHT_W_POINTER = 62 + 22;
+  var fillAddressField = function () {
+    var x = parseInt(mainPin.style.left, 10) + MAIN_PIN_WIDTH / 2;
+    var y = parseInt(mainPin.style.top, 10) + MAIN_PIN_HEIGHT_W_POINTER;
+    addressField.value = x + ', ' + y;
+    return addressField;
+  };
+  var disableMainForm = function () {
+    var inputArray = document.querySelectorAll('fieldset');
+    inputArray.forEach(function (item) {
+      item.setAttribute('disabled', true);
+    });
+    return inputArray;
+  };
+  var disableHeaderForm = function () {
+    var selectArray = document.querySelectorAll('select');
+    selectArray.forEach(function (item) {
+      item.setAttribute('disabled', true);
+    });
+    return selectArray;
+  };
+  var activateForm = function () {
+    var inputArray = document.querySelectorAll('fieldset');
+    inputArray.forEach(function (item) {
+      item.removeAttribute('disabled');
+    });
+    return inputArray;
+  };
+  var activateHeaderForm = function () {
+    var selectArray = document.querySelectorAll('select');
+    selectArray.forEach(function (item) {
+      item.removeAttribute('disabled');
+    });
+    return selectArray;
+  };
+  var setValidation = function () {
+    adForm.addEventListener('change', onFormChange);
   };
   var validateRoomsNumbers = function () {
     var roomsCapacityMap = {
@@ -82,13 +83,12 @@
   };
   var validateTypes = function () {
     var selectedOption = typeSelect.value; // выбранный option селекта type
-    var arrayObjTypes =
-      {
-        'palace': 10000,
-        'house': 5000,
-        'flat': 1000,
-        'bungalo': 0,
-      };
+    var arrayObjTypes = {
+      'palace': 10000,
+      'house': 5000,
+      'flat': 1000,
+      'bungalo': 0,
+    };
     inputPrice.min = arrayObjTypes[selectedOption]; // Тут мы проходимся по словарю с помощью значения, которое получили из selectedOption и по нему задаем значения ипнутов
     inputPrice.placeholder = arrayObjTypes[selectedOption];
   };
@@ -108,4 +108,12 @@
     });
   };
   preValidate();
+  window.form = {
+    fillAddressField: fillAddressField,
+    disableMainForm: disableMainForm,
+    disableHeaderForm: disableHeaderForm,
+    activateForm: activateForm,
+    activateHeaderForm: activateHeaderForm,
+    setValidation: setValidation
+  };
 })();

@@ -1,52 +1,67 @@
 'use strict';
 
 (function () {
-  window.clearMap = function () {
+  var pins = window.data.pins;
+  var renderPins = window.map.renderPins;
+  var fillAddressField = window.form.fillAddressField;
+  var setValidation = window.form.setValidation;
+  var activateForm = window.form.activateForm;
+  var activateHeaderForm = window.form.activateHeaderForm;
+  var disableMainForm = window.form.disableMainForm;
+  var disableHeaderForm = window.form.disableHeaderForm;
+  var mainPin = window.map.mainPin;
+
+  var MAIN_PIN_HEIGHT = 62;
+  var MAIN_PIN_WIDTH = 62;
+  var MAIN_PIN_HEIGHT_W_POINTER = 62 + 22;
+
+  var clearMap = function () {
     document.querySelector('.map').classList.remove('map--faded');
     document.querySelector('.ad-form').classList.remove('ad-form--disabled');
   };
 
-  window.muteMap = function () {
+  var muteMap = function () {
     document.querySelector('.map').classList.add('map--faded');
   };
 
-  window.pinMain = {
-    mainPin: document.querySelector('.map__pin--main'),
-    MAIN_PIN_HEIGHT: 62,
-    MAIN_PIN_WIDTH: 62,
-    MAIN_PIN_HEIGHT_W_POINTER: 62 + 22,
-  };
-
   var getCoordinatesMainPin = function () {
-    var x = parseInt(window.pinMain.mainPin.style.left, 10) + window.pinMain.MAIN_PIN_WIDTH / 2;
-    var y = parseInt(window.pinMain.mainPin.style.top, 10) + window.pinMain.MAIN_PIN_HEIGHT / 2;
-    window.formFunctions.fillAddressField().value = x + ', ' + y;
+    var x = parseInt(mainPin.style.left, 10) + MAIN_PIN_WIDTH / 2;
+    var y = parseInt(mainPin.style.top, 10) + MAIN_PIN_HEIGHT / 2;
+    window.form.fillAddressField().value = x + ', ' + y;
   };
-  window.setStartStateOfPage = function () {
-    window.formFunctions.disableMainForm();
-    window.formFunctions.disableHeaderForm();
-    window.muteMap();
+  var setStartStateOfPage = function () {
+    disableMainForm();
+    disableHeaderForm();
+    muteMap();
     getCoordinatesMainPin();
   };
-  window.activatePage = function () {
-    window.clearMap();
-    window.formFunctions.fillAddressField();
-    window.formFunctions.setValidation();
-    window.renderPins(window.pins);
-    window.formFunctions.activateForm();
-    window.formFunctions.activateHeaderForm();
-    window.pinMain.mainPin.removeEventListener('mousedown', window.activatePage);
-    window.pinMain.mainPin.removeEventListener('keydown', window.setActivatePage);
+  var activatePage = function () {
+    clearMap();
+    fillAddressField();
+    setValidation();
+    renderPins(pins);
+    activateForm();
+    activateHeaderForm();
+    mainPin.removeEventListener('mousedown', activatePage);
+    mainPin.removeEventListener('keydown', setActivatePage);
   };
 
-  window.setActivatePage = function (evt) {
-    if (evt.keyCode === window.keyCodes.enterKeycode) {
-      window.activatePage();
+  var setActivatePage = function (evt) {
+    if (evt.keyCode === window.util.enterKeycode) {
+      activatePage();
     }
   };
 
-  window.pinMain.mainPin.addEventListener('mousedown', window.activatePage);
+  mainPin.addEventListener('mousedown', activatePage);
 
-  window.pinMain.mainPin.addEventListener('keydown', window.setActivatePage);
-  window.setStartStateOfPage();
+  mainPin.addEventListener('keydown', setActivatePage);
+
+  setStartStateOfPage();
+  window.setup = {
+    clearMap: clearMap,
+    muteMap: muteMap,
+    MAIN_PIN_HEIGHT: MAIN_PIN_HEIGHT,
+    MAIN_PIN_WIDTH: MAIN_PIN_WIDTH,
+    MAIN_PIN_HEIGHT_W_POINTER: MAIN_PIN_HEIGHT_W_POINTER
+  };
 })();

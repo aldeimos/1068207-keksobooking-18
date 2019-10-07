@@ -1,7 +1,10 @@
 'use strict';
 
 (function () {
+  var mainPin = document.querySelector('.map__pin--main');
+  var offerTypes = window.data.offerTypes;
 
+  var ESC_KEYCODE = window.util.escKeycode;
   var onButtonCloseClick = function () {
     var buttons = document.querySelectorAll('.popup__close');
     buttons.forEach(function (item) {
@@ -12,7 +15,7 @@
   var onEscClosePopup = function (evt) {
     var buttons = document.querySelectorAll('.popup__close');
     buttons.forEach(function (item) {
-      if (evt.keyCode === window.keyCodes.escKeycode) {
+      if (evt.keyCode === ESC_KEYCODE) {
         item.parentElement.remove();
         document.removeEventListener('keydown', onEscClosePopup);
       }
@@ -39,7 +42,7 @@
     return pinTemplate;
   };
 
-  window.renderPins = function (pins) { // принимает массив объектов
+  var renderPins = function (pins) { // принимает массив объектов
     var mapPins = document.querySelector('.map__pins');
     var fragment = document.createDocumentFragment();
     pins.forEach(function (pin) {
@@ -53,7 +56,7 @@
     cardTemplate.querySelector('.popup__title').textContent = props.offer.title;
     cardTemplate.querySelector('.popup__text--address').textContent = props.offer.address;
     cardTemplate.querySelector('.popup__text--price').innerHTML = props.offer.price + '<span>₽/ночь</span>';
-    cardTemplate.querySelector('.popup__type').innerHTML = window.offerTypes[props.offer.type];
+    cardTemplate.querySelector('.popup__type').innerHTML = offerTypes[props.offer.type];
     cardTemplate.querySelector('.popup__text--capacity').textContent = props.offer.rooms + ' комнаты для ' + props.offer.guests + ' гостей.';
     cardTemplate.querySelector('.popup__text--time').textContent = 'Заезд после ' + props.offer.checkin + ', ' + 'выезд до ' + props.offer.checkout;
     cardTemplate.querySelector('.popup__features').innerHTML = '';
@@ -76,5 +79,9 @@
     cardTemplate.querySelector('.popup__avatar').src = props.author.avatar;
     cardTemplate.querySelector('.popup__close').addEventListener('click', onButtonCloseClick);
     document.querySelector('.map').appendChild(cardTemplate);
+  };
+  window.map = {
+    renderPins: renderPins,
+    mainPin: mainPin
   };
 })();
