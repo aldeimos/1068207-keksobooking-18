@@ -1,6 +1,9 @@
 'use strict';
 
 (function () {
+  var ESC_KEYCODE = 27;
+  var ENTER_KEYCODE = 13;
+
   var shuffleArray = function (array) {
     var tempArray = array.slice();
     for (var i = tempArray.length - 1; i > 0; i--) {
@@ -30,7 +33,7 @@
     randomIntFromInterval: randomIntFromInterval,
     getRandomNumber: getRandomNumber,
     getRandomElementFromArray: getRandomElementFromArray,
-    escKeycode: 27,
-    enterKeycode: 13
+    escKeycode: ESC_KEYCODE,
+    enterKeycode: ENTER_KEYCODE
   };
 })();

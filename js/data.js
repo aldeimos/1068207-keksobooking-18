@@ -1,15 +1,22 @@
 'use strict';
 
 (function () {
-  var getArrayWithRandomLength = window.util.getArrayWithRandomLength;
-  var randomIntFromInterval = window.util.randomIntFromInterval;
-  var getRandomElementFromArray = window.util.getRandomElementFromArray;
-
   var AVATAR_WIDTH = 50;
   var LOCATION_X_START = AVATAR_WIDTH / 2;
   var LOCATION_X_END = 1200 - AVATAR_WIDTH / 2; // Максимальная ширина <body>
   var LOCATION_Y_START = 130;
   var LOCATION_Y_END = 630;
+  var CHECK_IN = ['12:00', '13:00', '14:00'];
+  var CHECK_OUT = ['12:00', '13:00', '14:00'];
+  var PHOTOS = [
+    'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
+    'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
+    'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
+  ];
+
+  var getArrayWithRandomLength = window.util.getArrayWithRandomLength;
+  var randomIntFromInterval = window.util.randomIntFromInterval;
+  var getRandomElementFromArray = window.util.getRandomElementFromArray;
 
   var offerTypes = {
     'palace': 'Дворец',
@@ -19,16 +26,8 @@
   };
 
   var offerTypesArray = Object.keys(offerTypes);
-
   var offerFeaturesList = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 
-  var CHECK_IN = ['12:00', '13:00', '14:00'];
-  var CHECK_OUT = ['12:00', '13:00', '14:00'];
-  var PHOTOS = [
-    'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
-    'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
-    'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
-  ];
   var generatePins = function (num) {
     var arrayTemplate = [];
     for (var i = 1; i <= num; i++) {
