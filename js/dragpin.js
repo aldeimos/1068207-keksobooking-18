@@ -1,5 +1,5 @@
 'use strict';
-
+// комментарий, чтобы гитхаб позволил сделать пулл реквест
 (function () {
   var MAIN_PIN_WIDTH = 62;
   var MAIN_PIN_HEIGHT_W_POINTER = 62 + 22;
