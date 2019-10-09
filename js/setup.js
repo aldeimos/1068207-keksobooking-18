@@ -7,7 +7,7 @@
 
   var pins = window.data.pins;
   var renderPins = window.map.renderPins;
-  var fillAddressField = window.map.fillAddressField;
+  var fillAddressField = window.dragpin.fillAddressField;
   var activateForm = window.form.activate;
   var activateHeaderForm = window.form.activateHeader;
   var disableMainForm = window.form.disableMain;
@@ -42,7 +42,7 @@
   };
 
   var setActivatePage = function (evt) {
-    if (evt.keyCode === window.util.enterKeycode) {
+    if (evt.keyCode === window.util.ENTER_KEYCODE) {
       activatePage();
     }
   };

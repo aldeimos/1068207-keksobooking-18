@@ -33,7 +33,7 @@
     randomIntFromInterval: randomIntFromInterval,
     getRandomNumber: getRandomNumber,
     getRandomElementFromArray: getRandomElementFromArray,
-    escKeycode: ESC_KEYCODE,
-    enterKeycode: ENTER_KEYCODE
+    ESC_KEYCODE: ESC_KEYCODE,
+    ENTER_KEYCODE: ENTER_KEYCODE
   };
 })();
