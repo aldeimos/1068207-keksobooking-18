@@ -1,8 +1,13 @@
 'use strict';
-
+// комментарий, чтобы гитхаб позволил сделать пулл реквест
 (function () {
   var MAIN_PIN_WIDTH = 62;
   var MAIN_PIN_HEIGHT_W_POINTER = 62 + 22;
+
+  var LEFT_COORDS_LIMIT = 0;
+  var RIGHT_COORDS_LIMIT = 1135;
+  var TOP_COORDS_LIMIT = 135;
+  var BOTTOM_COORDS_LIMIT = 620;
 
   var mainPin = window.map.mainPin;
 
@@ -29,24 +34,20 @@
         x: moveEvt.clientX,
         y: moveEvt.clientY
       };
-      var leftCoordsLimit = 0;
-      var rightCoordsLimit = 1135;
-      var topCoordsLimit = 135;
-      var bottomCoordsLimit = 620;
 
       mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
       mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
 
-      if (parseInt(mainPin.style.left, 10) < leftCoordsLimit) {
-        mainPin.style.left = leftCoordsLimit + 'px';
-      } else if (parseInt(mainPin.style.left, 10) > rightCoordsLimit) {
-        mainPin.style.left = 1135 + 'px';
+      if (parseInt(mainPin.style.left, 10) < LEFT_COORDS_LIMIT) {
+        mainPin.style.left = LEFT_COORDS_LIMIT + 'px';
+      } else if (parseInt(mainPin.style.left, 10) > RIGHT_COORDS_LIMIT) {
+        mainPin.style.left = RIGHT_COORDS_LIMIT + 'px';
       }
 
-      if (parseInt(mainPin.style.top, 10) < topCoordsLimit) {
-        mainPin.style.top = topCoordsLimit + 'px';
-      } else if (parseInt(mainPin.style.top, 10) > bottomCoordsLimit) {
-        mainPin.style.top = bottomCoordsLimit + 'px';
+      if (parseInt(mainPin.style.top, 10) < TOP_COORDS_LIMIT) {
+        mainPin.style.top = TOP_COORDS_LIMIT + 'px';
+      } else if (parseInt(mainPin.style.top, 10) > BOTTOM_COORDS_LIMIT) {
+        mainPin.style.top = BOTTOM_COORDS_LIMIT + 'px';
       }
       fillAddressField(MAIN_PIN_HEIGHT_W_POINTER);
     };
