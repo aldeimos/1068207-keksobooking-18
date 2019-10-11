@@ -5,8 +5,8 @@
   var MAIN_PIN_WIDTH = 62;
   var MAIN_PIN_HEIGHT_W_POINTER = 62 + 22;
 
-  var pins = window.data.pins;
   var renderPins = window.map.renderPins;
+  var backendLoad = window.backend.load;
   var fillAddressField = window.dragpin.fillAddressField;
   var activateForm = window.form.activate;
   var activateHeaderForm = window.form.activateHeader;
@@ -24,6 +24,19 @@
     document.querySelector('.map').classList.add('map--faded');
   };
 
+  var successHandler = function (array) {
+    renderPins(array);
+  };
+
+  var errorHandler = function (errorMessage) {
+    var errorPlace = document.querySelector('#error').content.cloneNode(true);
+    var main = document.querySelector('main');
+    errorPlace.querySelector('.error__message').textContent = errorMessage;
+    main.appendChild(errorPlace);
+
+  };
+
+
   var setStartStateOfPage = function () {
     disableMainForm();
     disableHeaderForm();
@@ -33,7 +46,7 @@
   var activatePage = function () {
     clearMap();
     setValidation();
-    renderPins(pins);
+    backendLoad(successHandler, errorHandler);
     activateForm();
     activateHeaderForm();
     mainPin.removeEventListener('mousedown', activatePage);
