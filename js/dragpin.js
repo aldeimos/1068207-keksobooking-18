@@ -18,7 +18,7 @@
     return addressField;
   };
 
-  mainPin.addEventListener('mousedown', function (evt) {
+  var onMainPinMouseDown = function (evt) {
     var startCoords = {
       x: evt.clientX,
       y: evt.clientY
@@ -59,8 +59,13 @@
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
-  });
+  };
+
+  mainPin.addEventListener('mousedown', onMainPinMouseDown);
   window.dragpin = {
-    fillAddressField: fillAddressField
+    fillAddressField: fillAddressField,
+    onMouseDownListener: onMainPinMouseDown,
+    MAIN_PIN_HEIGHT_W_POINTER: MAIN_PIN_HEIGHT_W_POINTER,
+    MAIN_PIN_WIDTH: MAIN_PIN_WIDTH
   };
 })();

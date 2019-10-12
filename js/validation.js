@@ -69,6 +69,7 @@
   };
   preValidate();
   window.validation = {
-    setFormChecking: setValidation
+    setFormChecking: setValidation,
+    adForm: adForm
   };
 })();

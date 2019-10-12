@@ -5,8 +5,8 @@
   var MAIN_PIN_WIDTH = 62;
   var MAIN_PIN_HEIGHT_W_POINTER = 62 + 22;
 
-  var pins = window.data.pins;
   var renderPins = window.map.renderPins;
+  var backendLoad = window.backend.load;
   var fillAddressField = window.dragpin.fillAddressField;
   var activateForm = window.form.activate;
   var activateHeaderForm = window.form.activateHeader;
@@ -14,6 +14,7 @@
   var disableHeaderForm = window.form.disableHeader;
   var mainPin = window.map.mainPin;
   var setValidation = window.validation.setFormChecking;
+  var errorHandler = window.formSend.errorHandler;
 
   var clearMap = function () {
     document.querySelector('.map').classList.remove('map--faded');
@@ -22,6 +23,10 @@
 
   var muteMap = function () {
     document.querySelector('.map').classList.add('map--faded');
+  };
+
+  var successHandler = function (array) {
+    renderPins(array);
   };
 
   var setStartStateOfPage = function () {
@@ -33,7 +38,7 @@
   var activatePage = function () {
     clearMap();
     setValidation();
-    renderPins(pins);
+    backendLoad(successHandler, errorHandler);
     activateForm();
     activateHeaderForm();
     mainPin.removeEventListener('mousedown', activatePage);
@@ -57,6 +62,7 @@
     muteMap: muteMap,
     MAIN_PIN_HEIGHT: MAIN_PIN_HEIGHT,
     MAIN_PIN_WIDTH: MAIN_PIN_WIDTH,
-    MAIN_PIN_HEIGHT_W_POINTER: MAIN_PIN_HEIGHT_W_POINTER
+    MAIN_PIN_HEIGHT_W_POINTER: MAIN_PIN_HEIGHT_W_POINTER,
+    activatePage: activatePage
   };
 })();

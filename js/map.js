@@ -2,7 +2,6 @@
 
 (function () {
   var ESC_KEYCODE = window.util.ESC_KEYCODE;
-  var offerTypes = window.data.offerTypes;
 
   var mainPin = document.querySelector('.map__pin--main');
 
@@ -55,7 +54,7 @@
     cardTemplate.querySelector('.popup__title').textContent = props.offer.title;
     cardTemplate.querySelector('.popup__text--address').textContent = props.offer.address;
     cardTemplate.querySelector('.popup__text--price').innerHTML = props.offer.price + '<span>₽/ночь</span>';
-    cardTemplate.querySelector('.popup__type').innerHTML = offerTypes[props.offer.type];
+    cardTemplate.querySelector('.popup__type').innerHTML = props.offer.type;
     cardTemplate.querySelector('.popup__text--capacity').textContent = props.offer.rooms + ' комнаты для ' + props.offer.guests + ' гостей.';
     cardTemplate.querySelector('.popup__text--time').textContent = 'Заезд после ' + props.offer.checkin + ', ' + 'выезд до ' + props.offer.checkout;
     cardTemplate.querySelector('.popup__features').innerHTML = '';
@@ -79,6 +78,7 @@
     cardTemplate.querySelector('.popup__close').addEventListener('click', onButtonCloseClick);
     document.querySelector('.map').appendChild(cardTemplate);
   };
+
   window.map = {
     renderPins: renderPins,
     mainPin: mainPin
