@@ -15,7 +15,7 @@
           onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
         }
       };
-      var onFormError = function () {
+      var onRequestError = function () {
         onError('Произошла ошибка соединения');
       };
       var onTimeout = function () {
@@ -23,7 +23,7 @@
       };
       xhr.addEventListener('load', onLoad);
 
-      xhr.addEventListener('error', onFormError); // написал бы onError, но такая переменная увы существует)
+      xhr.addEventListener('error', onRequestError);
       xhr.addEventListener('timeout', onTimeout);
 
       xhr.timeout = 10000;

@@ -11,37 +11,36 @@
   var mainPinX = mainPin.style.left;
   var mainPinY = mainPin.style.top;
   var main = document.querySelector('main');
-  /* var errorPopup = main.querySelector('.error');
-  main.removeChild(errorPopup); */ // Очень странно работает область видимости. Если я беру данные из глобальных переменных в обработчики событий кликап и кейдауна, но окно с ошибкой возвращает undef
 
-
-  var onClickErrorPopupClose = function () {
-    var errorPopup = main.querySelector('.error'); // поэтому пришлось продублировать пока в двух местах
+  var errorPopupHandlerFrame = function () {
+    var errorPopup = main.querySelector('.error');
     main.removeChild(errorPopup);
     document.removeEventListener('click', onClickErrorPopupClose);
     document.removeEventListener('keydown', onEscErrorPopupClose);
   };
-  var onEscErrorPopupClose = function (evt) {
-    if (evt.keyCode === ESC_KEYCODE) {
-      var errorPopup = main.querySelector('.error'); // поэтому пришлось продублировать пока в двух местах
-      main.removeChild(errorPopup);
-      document.removeEventListener('keydown', onEscErrorPopupClose);
-      document.removeEventListener('click', onClickErrorPopupClose);
-    }
-  };
 
-  var onClickSuccessPopupClose = function () {
-    var successPopup = main.querySelector('.success'); // поэтому пришлось продублировать пока в двух местах
+  var successPopupHandlerFrame = function () {
+    var successPopup = main.querySelector('.success');
     main.removeChild(successPopup);
     document.removeEventListener('click', onClickSuccessPopupClose);
     document.removeEventListener('keydown', onEscSuccessPopupClose);
   };
+
+  var onClickErrorPopupClose = function () {
+    errorPopupHandlerFrame();
+  };
+  var onEscErrorPopupClose = function (evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      errorPopupHandlerFrame();
+    }
+  };
+
+  var onClickSuccessPopupClose = function () {
+    successPopupHandlerFrame();
+  };
   var onEscSuccessPopupClose = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
-      var successPopup = main.querySelector('.success'); // поэтому пришлось продублировать пока в двух местах
-      main.removeChild(successPopup);
-      document.removeEventListener('keydown', onEscSuccessPopupClose);
-      document.removeEventListener('click', onClickSuccessPopupClose);
+      successPopupHandlerFrame();
     }
   };
 
