@@ -14,6 +14,7 @@
   var disableHeaderForm = window.form.disableHeader;
   var mainPin = window.map.mainPin;
   var setValidation = window.validation.setFormChecking;
+  var errorHandler = window.formSend.errorHandler;
 
   var clearMap = function () {
     document.querySelector('.map').classList.remove('map--faded');
@@ -27,15 +28,6 @@
   var successHandler = function (array) {
     renderPins(array);
   };
-
-  var errorHandler = function (errorMessage) {
-    var errorPlace = document.querySelector('#error').content.cloneNode(true);
-    var main = document.querySelector('main');
-    errorPlace.querySelector('.error__message').textContent = errorMessage;
-    main.appendChild(errorPlace);
-
-  };
-
 
   var setStartStateOfPage = function () {
     disableMainForm();
@@ -70,6 +62,7 @@
     muteMap: muteMap,
     MAIN_PIN_HEIGHT: MAIN_PIN_HEIGHT,
     MAIN_PIN_WIDTH: MAIN_PIN_WIDTH,
-    MAIN_PIN_HEIGHT_W_POINTER: MAIN_PIN_HEIGHT_W_POINTER
+    MAIN_PIN_HEIGHT_W_POINTER: MAIN_PIN_HEIGHT_W_POINTER,
+    activatePage: activatePage
   };
 })();

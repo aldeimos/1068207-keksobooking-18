@@ -8,28 +8,46 @@
       var xhr = new XMLHttpRequest();
       xhr.responseType = 'json';
 
-      var onFormDownload = function () {
+      var onLoad = function () {
         if (xhr.status === 200) {
           onSuccess(xhr.response);
         } else {
           onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
         }
       };
-      var onFormServerError = function () {
+      var onFormError = function () {
         onError('Произошла ошибка соединения');
       };
-      var onFormServerTimeout = function () {
+      var onTimeout = function () {
         onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
       };
-      xhr.addEventListener('load', onFormDownload);
+      xhr.addEventListener('load', onLoad);
 
-      xhr.addEventListener('error', onFormServerError);
-      xhr.addEventListener('timeout', onFormServerTimeout);
+      xhr.addEventListener('error', onFormError); // написал бы onError, но такая переменная увы существует)
+      xhr.addEventListener('timeout', onTimeout);
 
       xhr.timeout = 10000;
 
       xhr.open('GET', GET_URL);
       xhr.send();
+    },
+    save: function (data, onLoad, onError) {
+      var POST_URL = 'https://js.dump.academy/keksobooking';
+      var xhr = new XMLHttpRequest();
+      xhr.responseType = 'json';
+
+      var onFormUploadStatus = function () {
+        if (xhr.status === 200) {
+          onLoad(xhr.response);
+        } else {
+          onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
+        }
+      };
+
+      xhr.addEventListener('load', onFormUploadStatus);
+
+      xhr.open('POST', POST_URL);
+      xhr.send(data);
     }
   };
 })();
