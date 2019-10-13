@@ -31,7 +31,7 @@
       xhr.open('GET', GET_URL);
       xhr.send();
     },
-    save: function (data, onLoad, onError) {
+    save: function (data, onLoad, onError) { // комментарий, чтобы пустил на пуллреквест
       var POST_URL = 'https://js.dump.academy/keksobooking';
       var xhr = new XMLHttpRequest();
       xhr.responseType = 'json';
