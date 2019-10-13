@@ -1,12 +1,13 @@
 'use strict';
 
 (function () {
+  var ESC_KEYCODE = window.util.ESC_KEYCODE;
+  var MAIN_PIN_HEIGHT_W_POINTER = window.dragpin.MAIN_PIN_HEIGHT_W_POINTER;
+
   var adForm = window.validation.adForm;
   var backendSave = window.backend.save;
   var mainPin = window.map.mainPin;
   var fillAddressField = window.dragpin.fillAddressField;
-  var ESC_KEYCODE = window.util.ESC_KEYCODE;
-  var MAIN_PIN_HEIGHT_W_POINTER = window.dragpin.MAIN_PIN_HEIGHT_W_POINTER;
 
   var mainPinX = mainPin.style.left;
   var mainPinY = mainPin.style.top;
