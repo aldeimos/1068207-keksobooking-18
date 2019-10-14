@@ -5,7 +5,7 @@
   var MAIN_PIN_WIDTH = 62;
   var MAIN_PIN_HEIGHT_W_POINTER = 62 + 22;
 
-  var renderPins = window.map.renderPins;
+  var successHandler = window.filter.successHandler;
   var backendLoad = window.backend.load;
   var fillAddressField = window.dragpin.fillAddressField;
   var activateForm = window.form.activate;
@@ -16,6 +16,7 @@
   var setValidation = window.validation.setFormChecking;
   var errorHandler = window.formSend.errorHandler;
 
+
   var clearMap = function () {
     document.querySelector('.map').classList.remove('map--faded');
     document.querySelector('.ad-form').classList.remove('ad-form--disabled');
@@ -25,9 +26,11 @@
     document.querySelector('.map').classList.add('map--faded');
   };
 
-  var successHandler = function (array) {
-    renderPins(array);
-  };
+  /*  var successHandler = function (array) { // сначала попробовал этот вариант, но он почему-то не работал.
+    startDataArray = array;                 // Можешь объяснить почему?
+    startDataArray.slice(0, 4);
+    renderPins(startDataArray);
+  }; */
 
   var setStartStateOfPage = function () {
     disableMainForm();
@@ -55,7 +58,6 @@
   mainPin.addEventListener('mousedown', activatePage);
 
   mainPin.addEventListener('keydown', setActivatePage);
-
   setStartStateOfPage();
   window.setup = {
     clearMap: clearMap,

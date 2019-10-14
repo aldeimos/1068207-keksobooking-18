@@ -42,8 +42,16 @@
 
   var renderPins = function (pins) { // принимает массив объектов
     var mapPins = document.querySelector('.map__pins');
+    var mapPinsChild = mapPins.querySelectorAll('.map__pin');
+    mapPinsChild.forEach(function (item) {
+      mapPins.removeChild(item);
+    });
+    mapPins.appendChild(mainPin);
     var fragment = document.createDocumentFragment();
-    pins.forEach(function (pin) {
+    pins.forEach(function (pin, index) {
+      if (index >= 5) {
+        return;
+      }
       fragment.appendChild(getPin(pin)); // в качестве аргумента элемент (объект) массива pins
     });
     mapPins.appendChild(fragment);
