@@ -49,7 +49,7 @@
     mapPins.appendChild(mainPin);
   };
 
-  var renderPins = function (pins) { // принимает массив объектов    
+  var renderPins = function (pins) { // принимает массив объектов
     var fragment = document.createDocumentFragment();
     deletePins();
     pins.slice(0, 5).forEach(function (pin) {
