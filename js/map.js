@@ -4,6 +4,7 @@
   var ESC_KEYCODE = window.util.ESC_KEYCODE;
 
   var mainPin = document.querySelector('.map__pin--main');
+  var mapPins = document.querySelector('.map__pins');
 
   var onButtonCloseClick = function () {
     var buttons = document.querySelectorAll('.popup__close');
@@ -40,18 +41,18 @@
     return pinTemplate;
   };
 
-  var renderPins = function (pins) { // принимает массив объектов
-    var mapPins = document.querySelector('.map__pins');
+  var deletePins = function () {
     var mapPinsChild = mapPins.querySelectorAll('.map__pin');
     mapPinsChild.forEach(function (item) {
       mapPins.removeChild(item);
     });
     mapPins.appendChild(mainPin);
+  };
+
+  var renderPins = function (pins) { // принимает массив объектов    
     var fragment = document.createDocumentFragment();
-    pins.forEach(function (pin, index) {
-      if (index >= 5) {
-        return;
-      }
+    deletePins();
+    pins.slice(0, 5).forEach(function (pin) {
       fragment.appendChild(getPin(pin)); // в качестве аргумента элемент (объект) массива pins
     });
     mapPins.appendChild(fragment);

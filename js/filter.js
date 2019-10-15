@@ -7,6 +7,9 @@
   var pins = [];
   var updateMap = function () {
     renderPins(pins.filter(function (item) {
+      if (upperHouseFilter.value === 'any') {
+        return item;
+      }
       return item.offer.type === upperHouseFilter.value;
     }));
   };
