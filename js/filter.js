@@ -6,20 +6,20 @@
 
   var upperHouseFilter = document.querySelector('#housing-type');
   var pins = [];
-  var updateMap = function () {
+  var onTypeFilterChange = function () {
+    removeAllCards();
     renderPins(pins.filter(function (item) {
-      removeAllCards();
       if (upperHouseFilter.value === 'any') {
-        return item;
+        return true;
       }
       return item.offer.type === upperHouseFilter.value;
     }));
   };
   var successHandler = function (array) {
-    pins = array; // каким образом мне удается закинуть переменную pins в функцию updateMap?
-    updateMap();
+    pins = array;
+    onTypeFilterChange();
   };
-  upperHouseFilter.addEventListener('change', updateMap);
+  upperHouseFilter.addEventListener('change', onTypeFilterChange);
   window.filter = {
     successHandler: successHandler
   };
