@@ -2,11 +2,13 @@
 
 (function () {
   var renderPins = window.map.renderPins;
+  var removeAllCards = window.formSend.removeAllCards;
 
   var upperHouseFilter = document.querySelector('#housing-type');
   var pins = [];
   var updateMap = function () {
     renderPins(pins.filter(function (item) {
+      removeAllCards();
       if (upperHouseFilter.value === 'any') {
         return item;
       }

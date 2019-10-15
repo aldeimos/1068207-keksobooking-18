@@ -70,17 +70,21 @@
     setStartCoordsMainPin();
   };
 
-  var successLoad = function () {
-    var mapPins = document.querySelector('.map__pins');
+  var removeAllCards = function () {
     var map = document.querySelector('.map');
-    var mapPinsCollection = document.querySelectorAll('.map__pin');
     var mapCardCollection = document.querySelectorAll('.map__card');
-    mapPinsCollection.forEach(function (item) {
-      mapPins.removeChild(item);
-    });
     mapCardCollection.forEach(function (item) {
       map.removeChild(item);
     });
+  };
+
+  var successLoad = function () {
+    var mapPins = document.querySelector('.map__pins');
+    var mapPinsCollection = document.querySelectorAll('.map__pin');
+    mapPinsCollection.forEach(function (item) {
+      mapPins.removeChild(item);
+    });
+    removeAllCards();
     mapPins.appendChild(mainPin);
     setStartCoordsMainPin();
     successHandler();
@@ -93,6 +97,7 @@
   };
   adForm.addEventListener('submit', onFormSubmitData);
   window.formSend = {
-    errorHandler: errorHandler
+    errorHandler: errorHandler,
+    removeAllCards: removeAllCards
   };
 })();
