@@ -49,21 +49,21 @@
     return item.offer.guests === Number(upperGuestsFilter.value);
   };
   var filterFeatures = function (item) {
-    var activeInputsValue = Array.from(document.querySelectorAll('.map__checkbox:checked')).map(function (checkbox) {
+    var selectedFeatures = Array.from(document.querySelectorAll('.map__checkbox:checked')).map(function (checkbox) {
       return checkbox.value;
     });
-    return activeInputsValue.every(function (val) {
+    return selectedFeatures.every(function (val) {
       return item.offer.features.includes(val);
     });
   };
 
   var onTypeFilterChange = function () {
     removeAllCards();
-    var filteredPins = pins.filter(filterHouseType).
-    filter(filterPrice).
-    filter(filterRooms).
-    filter(filterGuests).
-    filter(filterFeatures);
+    var filteredPins = pins.filter(filterHouseType)
+    .filter(filterPrice)
+    .filter(filterRooms)
+    .filter(filterGuests)
+    .filter(filterFeatures);
     renderPins(filteredPins);
   };
   var successHandler = function (array) {
