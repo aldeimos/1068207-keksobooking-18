@@ -8,13 +8,26 @@
   var uploadAdvertPhoto = document.querySelector('input#images');
   var previewAdvertPhoto = document.querySelector('.ad-form__photo');
 
-  var onChangePhoto = function (uploadButton, previewBlock) {
-    var file = uploadButton.files[0];
-    var fileName = file.name.toLowerCase();
-    var imgSource = previewBlock;
+  var onChangePhoto = function (evt) {
+    var uploadButton = evt.target;
+    var imgSource;
+    var file = Array.from(uploadButton.files);
+    var fileNames;
+    file.forEach(function (item) {
+      fileNames = item.name.toLowerCase();
+    });
+
+    switch (uploadButton) {
+      case (uploadAvatarButton):
+        imgSource = previewAvatarPhoto;
+        break;
+      case (uploadAdvertPhoto):
+        imgSource = previewAdvertPhoto;
+        break;
+    }
 
     var onLoadPhoto = function () {
-      if (imgSource.hasChildNodes()) {
+      if (imgSource === previewAvatarPhoto) {
         var preview = imgSource.querySelector('img');
         preview.src = reader.result;
       } else {
@@ -28,18 +41,20 @@
 
     if (file) {
       var matches = FILE_TYPES.some(function (it) {
-        return fileName.endsWith(it);
+        return fileNames.endsWith(it);
       });
     }
 
     if (matches) {
       var reader = new FileReader();
       reader.addEventListener('load', onLoadPhoto);
-      reader.readAsDataURL(file);
+      file.forEach(function (item) {
+        reader.readAsDataURL(item);
+      });
     }
   };
 
-  uploadAvatarButton.addEventListener('change', onChangePhoto.bind(this, uploadAvatarButton, previewAvatarPhoto));
-  uploadAdvertPhoto.addEventListener('change', onChangePhoto.bind(this, uploadAdvertPhoto, previewAdvertPhoto));
+  uploadAvatarButton.addEventListener('change', onChangePhoto);
+  uploadAdvertPhoto.addEventListener('change', onChangePhoto);
 
 })();
