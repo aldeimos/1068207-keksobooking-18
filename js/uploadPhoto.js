@@ -8,23 +8,19 @@
   var uploadAdvertPhoto = document.querySelector('input#images');
   var previewAdvertPhoto = document.querySelector('.ad-form__photo');
 
+  var imgUploadMap = {
+    'avatar': previewAvatarPhoto,
+    'images': previewAdvertPhoto
+  };
+
   var onChangePhoto = function (evt) {
     var uploadButton = evt.target;
-    var imgSource;
-    var file = Array.from(uploadButton.files);
+    var imgSource = imgUploadMap[evt.target.id];
+    var files = Array.from(uploadButton.files);
     var fileNames;
-    file.forEach(function (item) {
+    files.forEach(function (item) {
       fileNames = item.name.toLowerCase();
     });
-
-    switch (uploadButton) {
-      case (uploadAvatarButton):
-        imgSource = previewAvatarPhoto;
-        break;
-      case (uploadAdvertPhoto):
-        imgSource = previewAdvertPhoto;
-        break;
-    }
 
     var onLoadPhoto = function () {
       if (imgSource === previewAvatarPhoto) {
@@ -39,7 +35,7 @@
       }
     };
 
-    if (file) {
+    if (files) {
       var matches = FILE_TYPES.some(function (it) {
         return fileNames.endsWith(it);
       });
@@ -48,7 +44,7 @@
     if (matches) {
       var reader = new FileReader();
       reader.addEventListener('load', onLoadPhoto);
-      file.forEach(function (item) {
+      files.forEach(function (item) {
         reader.readAsDataURL(item);
       });
     }
