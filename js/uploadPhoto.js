@@ -7,6 +7,7 @@
 
   var uploadAdvertPhoto = document.querySelector('input#images');
   var previewAdvertPhoto = document.querySelector('.ad-form__photo');
+  var previewAdvertPhotoContainer = document.querySelector('.ad-form__photo-container');
 
   var imgUploadMap = {
     'avatar': previewAvatarPhoto,
@@ -27,11 +28,15 @@
         var preview = imgSource.querySelector('img');
         preview.src = reader.result;
       } else {
+        previewAdvertPhoto.remove();
+        var newPreviewAdvertPhoto = document.createElement('div');
+        newPreviewAdvertPhoto.classList.add('ad-form__photo');
         var advertImage = document.createElement('img');
         advertImage.src = reader.result;
         advertImage.style.width = 70 + 'px';
         advertImage.style.height = 70 + 'px';
-        imgSource.appendChild(advertImage);
+        newPreviewAdvertPhoto.appendChild(advertImage);
+        previewAdvertPhotoContainer.appendChild(newPreviewAdvertPhoto);
       }
     };
 
