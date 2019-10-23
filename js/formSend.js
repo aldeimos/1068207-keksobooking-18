@@ -1,84 +1,25 @@
 'use strict';
 
 (function () {
-  var ESC_KEYCODE = window.util.ESC_KEYCODE;
   var MAIN_PIN_HEIGHT_W_POINTER = window.dragpin.MAIN_PIN_HEIGHT_W_POINTER;
+  var AVATAR_DEFAULT_SRC = 'img/muffin-grey.svg';
 
   var adForm = window.validation.adForm;
   var backendSave = window.backend.save;
   var mainPin = window.map.mainPin;
-  var fillAddressField = window.dragpin.fillAddressField;
+  var removeAllCards = window.filter.removeAllCards;
+  var errorHandler = window.backendHandlers.errorHandler;
+  var setStartCoordsMainPin = window.backendHandlers.setStartCoordsMainPin;
+  var successHandler = window.backendHandlers.successHandler;
+  var setStartStateOfPage = window.setup.setStartStateOfPage;
+  var activateForm = window.setup.activateForm;
+  var activateHeaderForm = window.setup.activateHeaderForm;
+  var onTypeFilterChange = window.filter.onTypeFilterChange;
+  var clearMap = window.setup.clearMap;
 
-  var mainPinX = mainPin.style.left;
-  var mainPinY = mainPin.style.top;
-  var main = document.querySelector('main');
+  var resetButton = document.querySelector('.ad-form__reset');
 
-  var errorPopupHandlerFrame = function () {
-    var errorPopup = main.querySelector('.error');
-    main.removeChild(errorPopup);
-    document.removeEventListener('click', onClickErrorPopupClose);
-    document.removeEventListener('keydown', onEscErrorPopupClose);
-  };
-
-  var successPopupHandlerFrame = function () {
-    var successPopup = main.querySelector('.success');
-    main.removeChild(successPopup);
-    document.removeEventListener('click', onClickSuccessPopupClose);
-    document.removeEventListener('keydown', onEscSuccessPopupClose);
-  };
-
-  var onClickErrorPopupClose = function () {
-    errorPopupHandlerFrame();
-  };
-  var onEscErrorPopupClose = function (evt) {
-    if (evt.keyCode === ESC_KEYCODE) {
-      errorPopupHandlerFrame();
-    }
-  };
-
-  var onClickSuccessPopupClose = function () {
-    successPopupHandlerFrame();
-  };
-  var onEscSuccessPopupClose = function (evt) {
-    if (evt.keyCode === ESC_KEYCODE) {
-      successPopupHandlerFrame();
-    }
-  };
-
-
-  var setStartCoordsMainPin = function () {
-    mainPin.style.left = mainPinX;
-    mainPin.style.top = mainPinY;
-    fillAddressField(MAIN_PIN_HEIGHT_W_POINTER);
-  };
-
-  var successHandler = function () {
-    var successPlace = document.querySelector('#success').content.cloneNode(true);
-    main.appendChild(successPlace);
-    document.addEventListener('keydown', onEscSuccessPopupClose);
-    document.addEventListener('click', onClickSuccessPopupClose);
-    document.removeEventListener('keydown', onEscErrorPopupClose);
-    document.removeEventListener('click', onClickErrorPopupClose);
-  };
-
-  var errorHandler = function (errorMessage) {
-    var errorPlace = document.querySelector('#error').content.cloneNode(true);
-    errorPlace.querySelector('.error__message').textContent = errorMessage;
-    document.addEventListener('keydown', onEscErrorPopupClose);
-    document.addEventListener('click', onClickErrorPopupClose);
-    main.appendChild(errorPlace);
-    setStartCoordsMainPin();
-  };
-
-  var removeAllCards = function () {
-    var map = document.querySelector('.map');
-    var mapCardCollection = document.querySelectorAll('.map__card');
-    mapCardCollection.forEach(function (item) {
-      map.removeChild(item);
-    });
-  };
-
-  var successLoad = function () {
+  var cleanPinsAndCards = function () {
     var mapPins = document.querySelector('.map__pins');
     var mapPinsCollection = document.querySelectorAll('.map__pin');
     mapPinsCollection.forEach(function (item) {
@@ -86,18 +27,44 @@
     });
     removeAllCards();
     mapPins.appendChild(mainPin);
-    setStartCoordsMainPin();
+  };
+
+  var cleanPhotos = function () {
+    var previewAvatarPhoto = document.querySelector('.ad-form-header__preview');
+    var avatar = previewAvatarPhoto.querySelector('img');
+    avatar.src = AVATAR_DEFAULT_SRC;
+  };
+
+  var successLoad = function () {
+    cleanPinsAndCards();
     successHandler();
+  };
+
+  var onMainPinClick = function () {
+    activateForm();
+    activateHeaderForm();
+    onTypeFilterChange();
+    clearMap();
+    setStartCoordsMainPin(MAIN_PIN_HEIGHT_W_POINTER);
+    mainPin.removeEventListener('click', onMainPinClick);
+  };
+
+  var resetForm = function () {
+    adForm.reset();
+    document.querySelector('.map__filters').reset();
+    setStartStateOfPage();
+    cleanPinsAndCards();
+    setStartCoordsMainPin(0);
+    cleanPhotos();
+    mainPin.addEventListener('click', onMainPinClick);
   };
 
   var onFormSubmitData = function (evt) {
     backendSave(new FormData(adForm), successLoad, errorHandler);
     evt.preventDefault();
-    adForm.reset();
+    setStartStateOfPage();
+    resetForm();
   };
   adForm.addEventListener('submit', onFormSubmitData);
-  window.formSend = {
-    errorHandler: errorHandler,
-    removeAllCards: removeAllCards
-  };
+  resetButton.addEventListener('click', resetForm);
 })();

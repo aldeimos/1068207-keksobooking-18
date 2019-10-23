@@ -14,7 +14,7 @@
   var disableHeaderForm = window.form.disableHeader;
   var mainPin = window.map.mainPin;
   var setValidation = window.validation.setFormChecking;
-  var errorHandler = window.formSend.errorHandler;
+  var errorHandler = window.backendHandlers.errorHandler;
 
 
   var clearMap = function () {
@@ -24,13 +24,8 @@
 
   var muteMap = function () {
     document.querySelector('.map').classList.add('map--faded');
+    document.querySelector('.ad-form').classList.remove('ad-form--disabled');
   };
-
-  /*  var successHandler = function (array) { // сначала попробовал этот вариант, но он почему-то не работал.
-    startDataArray = array;                 // Можешь объяснить почему?
-    startDataArray.slice(0, 4);
-    renderPins(startDataArray);
-  }; */
 
   var setStartStateOfPage = function () {
     disableMainForm();
@@ -65,6 +60,9 @@
     MAIN_PIN_HEIGHT: MAIN_PIN_HEIGHT,
     MAIN_PIN_WIDTH: MAIN_PIN_WIDTH,
     MAIN_PIN_HEIGHT_W_POINTER: MAIN_PIN_HEIGHT_W_POINTER,
-    activatePage: activatePage
+    activatePage: activatePage,
+    setStartStateOfPage: setStartStateOfPage,
+    activateForm: activateForm,
+    activateHeaderForm: activateHeaderForm,
   };
 })();

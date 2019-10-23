@@ -3,7 +3,6 @@
 (function () {
   var DEFAULT_FILTER_VALUE = 'any';
   var renderPins = window.map.renderPins;
-  var removeAllCards = window.formSend.removeAllCards;
 
   var mapFilters = document.querySelector('.map__filters');
   var upperHouseFilter = document.querySelector('#housing-type');
@@ -57,6 +56,14 @@
     });
   };
 
+  var removeAllCards = function () {
+    var map = document.querySelector('.map');
+    var mapCardCollection = document.querySelectorAll('.map__card');
+    mapCardCollection.forEach(function (item) {
+      map.removeChild(item);
+    });
+  };
+
   var onTypeFilterChange = function () {
     removeAllCards();
     var filteredPins = pins.filter(filterHouseType)
@@ -72,6 +79,8 @@
   };
   mapFilters.addEventListener('change', onTypeFilterChange);
   window.filter = {
-    successHandler: successHandler
+    successHandler: successHandler,
+    removeAllCards: removeAllCards,
+    onTypeFilterChange: onTypeFilterChange
   };
 })();
