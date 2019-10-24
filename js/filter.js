@@ -78,10 +78,10 @@
     pins = array;
     debounce(onTypeFilterChange);
   };
-  mapFilters.addEventListener('change', onTypeFilterChange); // не сообразил, как поставить на этот обработчик debounce
+  mapFilters.addEventListener('change', onTypeFilterChange);
   window.filter = {
     successHandler: successHandler,
     removeAllCards: removeAllCards,
-    onTypeFilterChange: onTypeFilterChange
+    onTypeFormChange: onTypeFilterChange
   };
 })();

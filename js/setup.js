@@ -24,7 +24,7 @@
 
   var muteMap = function () {
     document.querySelector('.map').classList.add('map--faded');
-    document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+    document.querySelector('.ad-form').classList.add('ad-form--disabled');
   };
 
   var setStartStateOfPage = function () {
