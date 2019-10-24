@@ -62,8 +62,6 @@
   };
   selectTimeIn.addEventListener('change', onSelectTimeInChange);
   selectTimeOut.addEventListener('change', onSelectTimeOutChange);
-
-  
   var preValidate = function () {
     Object.values(validatorsMap).forEach(function (fn) {
       fn();
