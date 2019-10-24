@@ -16,6 +16,7 @@
   var activateHeaderForm = window.setup.activateHeaderForm;
   var onTypeFilterChange = window.filter.onTypeFilterChange;
   var clearMap = window.setup.clearMap;
+  var debounce = window.util.debounce;
 
   var resetButton = document.querySelector('.ad-form__reset');
 
@@ -31,8 +32,18 @@
 
   var cleanPhotos = function () {
     var previewAvatarPhoto = document.querySelector('.ad-form-header__preview');
+    var previewAdvertPhoto = document.querySelectorAll('.ad-form__photo');
+
     var avatar = previewAvatarPhoto.querySelector('img');
     avatar.src = AVATAR_DEFAULT_SRC;
+
+    previewAdvertPhoto.forEach(function (item, index) {
+      if (index === 0) {
+        item.innerHTML = '';
+      } else {
+        item.remove();
+      }
+    });
   };
 
   var successLoad = function () {
@@ -43,7 +54,7 @@
   var onMainPinClick = function () {
     activateForm();
     activateHeaderForm();
-    onTypeFilterChange();
+    debounce(onTypeFilterChange);
     clearMap();
     setStartCoordsMainPin(MAIN_PIN_HEIGHT_W_POINTER);
     mainPin.removeEventListener('click', onMainPinClick);

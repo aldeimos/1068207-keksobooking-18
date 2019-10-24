@@ -3,6 +3,9 @@
 (function () {
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;
+  var DEBOUNCE_INTERVAL = 500;
+
+  var lastTimeout;
 
   var shuffleArray = function (array) {
     var tempArray = array.slice();
@@ -26,6 +29,12 @@
   var getRandomElementFromArray = function (array) {
     return array[window.util.getRandomNumber(array.length - 1)];
   };
+  var debounce = function (cb) {
+    if (lastTimeout) {
+      window.clearTimeout(lastTimeout);
+    }
+    lastTimeout = window.setTimeout(cb, DEBOUNCE_INTERVAL);
+  };
 
   window.util = {
     shuffleArray: shuffleArray,
@@ -34,6 +43,7 @@
     getRandomNumber: getRandomNumber,
     getRandomElementFromArray: getRandomElementFromArray,
     ESC_KEYCODE: ESC_KEYCODE,
-    ENTER_KEYCODE: ENTER_KEYCODE
+    ENTER_KEYCODE: ENTER_KEYCODE,
+    debounce: debounce
   };
 })();

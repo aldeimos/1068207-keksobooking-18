@@ -3,6 +3,7 @@
 (function () {
   var DEFAULT_FILTER_VALUE = 'any';
   var renderPins = window.map.renderPins;
+  var debounce = window.util.debounce;
 
   var mapFilters = document.querySelector('.map__filters');
   var upperHouseFilter = document.querySelector('#housing-type');
@@ -75,9 +76,9 @@
   };
   var successHandler = function (array) {
     pins = array;
-    onTypeFilterChange();
+    debounce(onTypeFilterChange);
   };
-  mapFilters.addEventListener('change', onTypeFilterChange);
+  mapFilters.addEventListener('change', onTypeFilterChange); // не сообразил, как поставить на этот обработчик debounce
   window.filter = {
     successHandler: successHandler,
     removeAllCards: removeAllCards,
